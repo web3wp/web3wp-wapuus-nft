@@ -1,0 +1,182 @@
+[
+    {
+        "image": "ipfs://QmYLVzRggDT3jByZjuDdH9HJP9p6EEbMncA9E4y7w9oXk6",
+        "external_url": "https://web3wp.infiniteuploads.cloud/wapuus/a32091c145ffa03cdac370e3a7c85187.png",
+        "tokenId": 0,
+        "name": "Wapuu #0",
+        "attributes": [
+            {
+                "trait_type": "Background",
+                "value": "Yellow"
+            },
+            {
+                "trait_type": "Body",
+                "value": "Light"
+            },
+            {
+                "trait_type": "Item",
+                "value": "Silver Coin"
+            },
+            {
+                "trait_type": "Clothing",
+                "value": "Cowboy"
+            },
+            {
+                "trait_type": "Shoes",
+                "value": "Fancy"
+            },
+            {
+                "trait_type": "Headgear",
+                "value": "None"
+            },
+            {
+                "trait_type": "Accessory",
+                "value": "Silver Earring"
+            }
+        ]
+    },
+    {
+        "image": "ipfs://QmcZc7nFJu7TY3cbe3dGydcvi4vxgB1Qmt7EfCCLiDE2BT",
+        "external_url": "https://web3wp.infiniteuploads.cloud/wapuus/64b3fd38686a83aacf22fae5346df723.png",
+        "tokenId": 1,
+        "name": "Wapuu #1",
+        "attributes": [
+            {
+                "trait_type": "Background",
+                "value": "Grey Wave"
+            },
+            {
+                "trait_type": "Body",
+                "value": "Grey"
+            },
+            {
+                "trait_type": "Item",
+                "value": "Pink Ball"
+            },
+            {
+                "trait_type": "Clothing",
+                "value": "Pirate"
+            },
+            {
+                "trait_type": "Shoes",
+                "value": "Basketball"
+            },
+            {
+                "trait_type": "Headgear",
+                "value": "Pirate Hat"
+            },
+            {
+                "trait_type": "Accessory",
+                "value": "None"
+            }
+        ]
+    },
+    {
+        "image": "ipfs://QmcDp8GfFmBSeaKg2Pg64N2aGp5c35X1mX9Sn2rrj14AHT",
+        "external_url": "https://web3wp.infiniteuploads.cloud/wapuus/19215c34149744b93f45e6d4d1e29e47.png",
+        "tokenId": 2,
+        "name": "Wapuu #2",
+        "attributes": [
+            {
+                "trait_type": "Background",
+                "value": "Blue"
+            },
+            {
+                "trait_type": "Body",
+                "value": "Original"
+            },
+            {
+                "trait_type": "Item",
+                "value": "Gradient HTML"
+            },
+            {
+                "trait_type": "Clothing",
+                "value": "Nerd"
+            },
+            {
+                "trait_type": "Shoes",
+                "value": "Fancy"
+            },
+            {
+                "trait_type": "Headgear",
+                "value": "Nerd Hair Green Glasses"
+            },
+            {
+                "trait_type": "Accessory",
+                "value": "None"
+            }
+        ]
+    },
+    {
+        "image": "ipfs://QmSkqidGx9fmcc6eXFamu5oY8LmQ3KjHXbHBZxBzq7YivG",
+        "external_url": "https://web3wp.infiniteuploads.cloud/wapuus/2a2b134e3b771add1da006a6ebd25e68.png",
+        "tokenId": 3,
+        "name": "Wapuu #3",
+        "attributes": [
+            {
+                "trait_type": "Background",
+                "value": "Rainbow"
+            },
+            {
+                "trait_type": "Body",
+                "value": "Dark Brown"
+            },
+            {
+                "trait_type": "Item",
+                "value": "Gradient HTML"
+            },
+            {
+                "trait_type": "Clothing",
+                "value": "None"
+            },
+            {
+                "trait_type": "Shoes",
+                "value": "Basketball"
+            },
+            {
+                "trait_type": "Headgear",
+                "value": "Red W Hat"
+            },
+            {
+                "trait_type": "Accessory",
+                "value": "Silver Earring"
+            }
+        ]
+    },
+    {
+        "image": "ipfs://QmVrSonHvKWkh43iP4pVSLY7UL8NTxzTTMRPiW8acwmf5Z",
+        "external_url": "https://web3wp.infiniteuploads.cloud/wapuus/addb505b55a3dd9ac27cc0652f1fe491.png",
+        "tokenId": 4,
+        "name": "Wapuu #4",
+        "attributes": [
+            {
+                "trait_type": "Background",
+                "value": "Pink"
+            },
+            {
+                "trait_type": "Body",
+                "value": "Grey"
+            },
+            {
+                "trait_type": "Item",
+                "value": "Record"
+            },
+            {
+                "trait_type": "Clothing",
+                "value": "Emo"
+            },
+            {
+                "trait_type": "Shoes",
+                "value": "Nerd"
+            },
+            {
+                "trait_type": "Headgear",
+                "value": "Emo Hair Blond"
+            },
+            {
+                "trait_type": "Accessory",
+                "value": "None"
+            }
+        ]
+    }
+]

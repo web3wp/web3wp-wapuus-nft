@@ -1,0 +1,19 @@
+{
+  "name": "wapuuapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy-dev": "serverless deploy --stage dev",
+    "deploy-prod": "serverless deploy --stage prod",
+    "logs-verify": "serverless logs --function verify --stage dev",
+    "logs-wapuus": "serverless logs --function wapuus --stage dev"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "safe-compare": "^1.1.4",
+    "web3": "^1.5.2"
+  }
+}

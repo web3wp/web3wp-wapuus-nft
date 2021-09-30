@@ -1,0 +1,40 @@
+{
+  "name": "wapuu-nfts",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "npx hardhat test",
+    "local-node": "npx hardhat node",
+    "contract-deploy": "npx hardhat run scripts/deploy.js --network",
+    "contract-verify": "npx hardhat verify --network",
+    "site-deploy": "BASE_PATH=/wapuu-app yarn next build && yarn next export && rsync -razdv out/ root@web3nft.tempurl.host:/var/web/site/public_html/wapuu-app"
+  },
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "next": "latest",
+    "postcss": "^8.1.10",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-markdown": "^7.0.1",
+    "react-twitter-widgets": "^1.10.0",
+    "tailwindcss": "^2.2.7",
+    "web3": "^1.5.2"
+  },
+  "devDependencies": {
+    "@ethersproject/hardware-wallets": "^5.4.0",
+    "@nomiclabs/hardhat-ethers": "^2.0.0",
+    "@nomiclabs/hardhat-etherscan": "^2.1.6",
+    "@nomiclabs/hardhat-waffle": "^2.0.0",
+    "@openzeppelin/contracts": "^4.3.1",
+    "autoprefixer": "^10.3.1",
+    "chai": "^4.2.0",
+    "chai-arrays": "^2.2.0",
+    "ethereum-waffle": "^3.0.0",
+    "ethers": "^5.0.0",
+    "hardhat": "^2.6.1",
+    "hardhat-gas-reporter": "^1.0.4"
+  }
+}
