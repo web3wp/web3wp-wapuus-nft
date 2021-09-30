@@ -2,11 +2,13 @@
 
 Wapuu is the lovable, open source, and (un)official mascot of WordPress. Wapuu swag has been created and collected at WordCamps around the world. Web3 WP took the next step by building a generative art project of 2,222 unique Wapuus that can be minted as an NFT, collected, and traded by the WordPress community on the Ethereum blockchain.
 
+![Wapuus](https://web3wp.infiniteuploads.cloud/2021/09/wapuu-designs.png)
+
 We review the use of this code in detail on [our blog at Web3 WP](https://web3wp.com/blog/).
 
 Run `yarn` (install yarn globally if you havn't yet) on the root dir to install most requirements.
 
-**This repo contains 4 distinct app that work together:**
+### This repo contains 4 distinct apps that work together:
 
 ## The Smart Contract
 
@@ -56,7 +58,7 @@ The main code for the 3 API endpoint is in *api/handler.js*. Main [Serverless](h
 
 ## The Wapuu Image/Trait Generator
 
-We built a programmatic generator that creates completely unique Wapuu characters based on a random set of more than one hundred distinct traits like hair, hats, accessories, clothing, holding items, and colors. Traits are weighted to have various rarities, some are very common, and some may only be found on a lucky handful of Wapuus. All these traits were created as transparent PNG layers, and the python script combines the layers to create the final Wapuus and their JSON metadata.
+We built a programmatic generator that creates completely unique Wapuu characters based on a random set of more than one hundred distinct traits like hair, hats, accessories, clothing, holding items, and colors. Traits are weighted to have various rarities, some are very common, and some may only be found on a lucky handful of Wapuus. All these traits were created as transparent PNG layers, and the python script combines the layers to create the final Wapuus and their JSON metadata. This can all be found in *image_generator/* directory.
 
 This repo only includes some samples traits of each layer as a starting point in the *image_generator/trait-layers* directory. 1-of-1 special edition Wapuus were placed in the *image_generator/completes/* directory and their special metadata defined in *image_generator/metadata/special-wapuus.json*.
 
