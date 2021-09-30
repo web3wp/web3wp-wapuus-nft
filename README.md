@@ -2,6 +2,8 @@
 
 Wapuu is the lovable, open source, and (un)official mascot of WordPress. Wapuu swag has been created and collected at WordCamps around the world. Web3 WP took the next step by building a generative art project of 2,222 unique Wapuus that can be minted as an NFT, collected, and traded by the WordPress community on the Ethereum blockchain.
 
+We review the use of this code in detail on [our blog at Web3 WP](https://web3wp.com/blog/).
+
 Run `yarn` (install yarn globally if you havn't yet) on the root dir to install most requirements.
 
 **This repo contains 4 distinct app that work together:**
