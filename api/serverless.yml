@@ -84,3 +84,10 @@ functions:
       - httpApi:
           path: /wapuus/verify-collector
           method: POST
+  
+  owned:
+    handler: handler.getOwned
+    events:
+      - httpApi:
+          path: /wapuus/owned/{wallet}
+          method: GET
