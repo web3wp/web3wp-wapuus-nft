@@ -28,6 +28,7 @@
 # misc
 .DS_Store
 *.pem
+ipfs-temp.py
 
 # debug
 npm-debug.log*
