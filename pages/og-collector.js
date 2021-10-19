@@ -25,12 +25,12 @@ export default function Verify() {
   }, [])
 
   async function clickSignIn() {
-        if (typeof window.web3 === 'undefined') {
-          alert("Please install MetaMask or another compatible Web3 wallet to connect.");
-        } else {
-          signIn()
-        }
-      }
+    if (typeof window.web3 === 'undefined') {
+      alert("Please install MetaMask or another compatible Web3 wallet to connect.");
+    } else {
+      signIn()
+    }
+  }
 
   async function signIn() {
     if (typeof window.web3 !== 'undefined') {

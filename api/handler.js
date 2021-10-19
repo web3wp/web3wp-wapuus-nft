@@ -39,17 +39,20 @@ module.exports.getWapuu = async (event) => {
 
     // IF YOU ARE NOT USING CUSTOM NAMES, JUST USE THIS
     //let tokenName= `Wapuu #${parseInt( tokenId )}`
-
-    const meta = traits[tokenId]
-
+    
+    let metadata = Object.assign({}, traits[tokenId]);
+    
     // CHECK OPENSEA METADATA STANDARD DOCUMENTATION https://docs.opensea.io/docs/metadata-standards
-    let metadata = meta
-
 
     // CALL CUSTOM TOKEN NAME IN THE CONTRACT, only if it's not a special edition
     if ( ! metadata.secret_content ) {
       const tokenNameCall = await wapuuContract.methods.viewWapuuName(tokenId).call();
       metadata.name = `Wapuu #${tokenId}${(tokenNameCall === '') ? "" : ` - ${tokenNameCall}`}`
+      if ( tokenNameCall ) {
+        metadata.attributes.push({
+            "value": "Custom Name"
+        });
+      }
     }
 
     //not for the public
@@ -203,11 +206,11 @@ module.exports.postOGVerify = async (event) => {
 
   var output = {};
 
-    if ( ogs[address] !== undefined ) {
-      output.url = ogs[address];
-    } else {
-      output.url = false;
-    }
+  if ( ogs[address] !== undefined ) {
+    output.url = ogs[address];
+  } else {
+    output.url = false;
+  }
 
   console.log("Output", output);
 
@@ -219,7 +222,105 @@ module.exports.postOGVerify = async (event) => {
   };
 };
 
+//Handle verifying wallet ownership to return owned renamable Wapuus
+module.exports.postOwned = async (event) => {
 
+  // import the json containing all metadata. For a large collection use a DB probably.
+  const traits = require('./all-traits.json')
+
+  // import the json containing all metadata.
+  const ogs = require('./og-collectors.json')
+
+  const requestBody = JSON.parse(event.body);
+  const address = requestBody.address;
+  const signature = requestBody.signature;
+
+  if (typeof address !== 'string' || typeof signature !== 'string') {
+    console.error('Validation Failed');
+    return {
+      statusCode: 400,
+      body: JSON.stringify(
+        {error: "The signature or address parameters is invalid or missing."},
+      ),
+    };
+  }
+
+  // SOME WEB3 STUFF TO CONNECT TO SMART CONTRACT
+  const provider = new Web3.providers.HttpProvider(config.infuraAddress);
+  const web3infura = new Web3(provider);
+  web3infura.eth.handleRevert = true;
+
+  let signer = await web3infura.eth.accounts.recover("Verify Wapuu NFT ownership", signature);
+  console.log(signer,address,signature);
+  if ( ! safeCompare(signer.toLowerCase(), address.toLowerCase()) ) {
+    return {
+      statusCode: 403,
+      body: JSON.stringify(
+        {error: "Invalid signature."},
+      ),
+    };
+  }
+
+  if ( ogs[address] === undefined ) {
+    return {
+      statusCode: 403,
+      body: JSON.stringify(
+        {error: "Sorry, only OG POAP collectors can name right now."},
+      ),
+    };
+  }
+
+  const wapuuContract = new web3infura.eth.Contract(config.contractABI, config.contractAddress);
+  console.log("ABI loaded");
+
+  const totalSupply = await wapuuContract.methods.totalSupply().call();
+  console.log("Total supply", totalSupply)
+
+  var output = [];
+  var addresses = []
+  //this is based off the generated metadata. Any Wapuu with secret content is special
+  
+  var tokens = []
+  for (let i = 0; i < totalSupply; i++) {
+    tokens.push(i);
+  }
+  var addresses = []
+  for (let i = 0; i < tokens.length; i++) {
+    addresses.push(address);
+  }
+      
+  //look up ownership of all special tokens for this address in batch.
+  //This is a workaround because my custom tokensOfOwner() method had a bug in the version deployed to mainnet
+  const ownedWapuus = await wapuuContract.methods.balanceOfBatch(addresses,tokens).call() 
+  //console.log("Owned Wapuus",ownedWapuus);
+
+  output = await Promise.all(tokens.map(async (tokenId) => {
+    if ( parseInt( ownedWapuus[tokenId] ) ) {
+      let meta = traits[tokenId]
+      if ( meta.secret_content ) { //skip special editions
+        return null;
+      }
+      const tokenNameCall = await wapuuContract.methods.viewWapuuName(tokenId).call();
+      meta.name = `Wapuu #${tokenId}${(tokenNameCall === '') ? "" : ` - ${tokenNameCall}`}`
+      return meta;
+    } else {
+      return null;
+    }
+  }));
+
+  output = output.filter(e => e != null);
+
+  console.log("Output", output);
+  
+  return {
+    statusCode: 200,
+    body: JSON.stringify(
+      {owned: output},
+    ),
+  };
+};
+
+//get list of renamable owned wapuus for a given address
 module.exports.getOwned = async (event) => {
 
   // import the json containing all metadata. For a large collection use a DB probably.
@@ -250,20 +351,10 @@ module.exports.getOwned = async (event) => {
 
   var output = [];
   var addresses = []
-  //this is based off the generated metadata. Any Wapuu with secret content is special
-  var specials = []
-  traits.forEach((wapuu, key) => {
-    if ( wapuu.secret_content ) {
-      specials.push(key);
-    }
-  });
-  console.log("Specials",specials);
   
   var tokens = []
   for (let i = 0; i < totalSupply; i++) {
-    if ( ! specials.includes(i) ) { //only include non-specials
-      tokens.push(i);
-    }
+    tokens.push(i);
   }
   var addresses = []
   for (let i = 0; i < tokens.length; i++) {
@@ -278,6 +369,9 @@ module.exports.getOwned = async (event) => {
   output = await Promise.all(tokens.map(async (tokenId) => {
     if ( parseInt( ownedWapuus[tokenId] ) ) {
       let meta = traits[tokenId]
+      if ( meta.secret_content ) { //skip special editions
+        return null;
+      }
       const tokenNameCall = await wapuuContract.methods.viewWapuuName(tokenId).call();
       meta.name = `Wapuu #${tokenId}${(tokenNameCall === '') ? "" : ` - ${tokenNameCall}`}`
       return meta;

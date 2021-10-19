@@ -85,6 +85,12 @@ functions:
           path: /wapuus/verify-collector
           method: POST
   
+  verify-owned:
+    handler: handler.postOwned
+    events:
+      - httpApi:
+          path: /wapuus/owned
+          method: POST
   owned:
     handler: handler.getOwned
     events:

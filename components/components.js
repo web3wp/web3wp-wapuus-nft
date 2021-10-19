@@ -241,7 +241,7 @@ export function RenameNFT() {
   const [wapuuContract, setWapuuContract] = useState(null)
   const [ownedWapuus, setWapuus] = useState(false)
   const [toRename, setWapuuRename] = useState(null)
-  const [newName, setNewName] = useState(null)
+  const [newName, setNewName] = useState("")
 
   // UI
   const [contractError, setError] = useState(null)
@@ -266,7 +266,7 @@ export function RenameNFT() {
           let wallet = accounts[0]
           setWalletAddress(wallet)
           setSignedIn(true)
-          callContractData(wallet)
+          //callContractData(wallet)
 
       })
       .catch(function (error) {
@@ -278,21 +278,33 @@ export function RenameNFT() {
 
   }
   
-  async function callContractData(wallet) {
+  async function verify() {
     const wapuuContract = new window.web3.eth.Contract(ABI, ADDRESS)
     setWapuuContract(wapuuContract)
 
     if (walletAddress) {
 
-      fetchAPI("owned/" + walletAddress, 'GET')
-        .catch(function (error) {
+      setError(null)
+
+      window.web3.eth.personal.sign("Verify Wapuu NFT ownership", walletAddress, null, (error, signature) => {
+        if (error) {
+          // Handle error. Likely the user rejected the sign request
+          console.error(error)
           setError(error.message)
-        })
-        .then(function (data) {
-          if (data.owned) {
-            setWapuus(data.owned)
-          }
-        });
+        } else {
+          fetchAPI("owned", 'POST', {address: walletAddress, signature: signature})
+          .catch(function (error) {
+            setError(error.message)
+          })
+          .then(function (data) {
+            if (data && data.owned) {
+              setWapuus(data.owned)
+            } else {
+              setError("Sorry, this wallet address does not qualify for naming right now.")
+            }
+          });
+        }
+      });
       
     }
   }
@@ -301,9 +313,7 @@ export function RenameNFT() {
     setWapuuRename(key)
     setWaiting(false)
     setDone(false)
-    if (key === null) {
-      signIn()
-    }
+    setError(null)
   }
 
   async function renameWapuu(tokenId, newName) {
@@ -312,10 +322,12 @@ export function RenameNFT() {
     setDone(false)
     if (wapuuContract) {
  
-      const price = 0; 
+      const price = 0;
      
+      console.log(tokenId, newName)
+
       var gasAmount = await wapuuContract.methods.changeWapuuName(tokenId, newName).estimateGas({from: walletAddress, value: price})
-      gasAmount = Math.round(gasAmount * 1.2); //add some padding so users don't lose it in a dropped transaction (this is just limit)
+      gasAmount = Math.round(gasAmount * 1.1); //add some padding so users don't lose it in a dropped transaction (this is just limit)
       console.log("gas limit estimation = " + gasAmount + " units");
       console.log({from: walletAddress, value: price})
 
@@ -333,8 +345,6 @@ export function RenameNFT() {
           })
         .then(function(newContractInstance){
             console.log(newContractInstance) // instance with the new contract address
-            //callContractData(walletAddress)
-            //Router.push('/success')
             //todo ping opensea to clear metadata
             const res = fetch("https://api.opensea.io/api/v1/asset/"+ADDRESS+"/"+tokenId+"/?force_update=true", {
               method: 'GET'
@@ -350,9 +360,26 @@ export function RenameNFT() {
 
   if (!ownedWapuus) { 
     return (
-      <div className="text-center">
-      <button onClick={() => signIn()} className="Poppitandfinchsans mt-4 rounded text-4xl border-6 bg-blau text-white hover:text-gray p-2 px-6 mb-8">Load Owned Wapuus...</button>                
+      <>
+      {contractError ? 
+          <div className="flex auth my-8 font-bold justify-center items-center vw2">
+            <span className="rounded montserrat inline-block border-2 border-red-500 bg-red-200 border-opacity-100 no-underline text-red-600 py-2 px-4 mx-4">{contractError}</span>
+          </div>
+          :''}
+      <div className="flex justify-around my-3">
+        <span className="flex Poppitandfinchsans text-3xl text-center text-white">
+        You can now give your non-special edition Wapuus a custom name by writing it to the blockchain! For the first week this is only available to early OG Wapuu collectors with no fee other than gas.
+        </span>
       </div>
+      <div className="flex justify-around my-3">
+        <span className="flex Poppitandfinchsans text-4xl text-center text-white">
+        Verify your wallet to name your Wapuu.
+        </span>
+      </div>
+      <div className="text-center">
+        <button onClick={() => verify()} className="Poppitandfinchsans mt-4 rounded text-4xl border-6 bg-blau text-white hover:text-gray p-2 px-6 mb-8">Verify</button>                
+      </div>
+      </>
     )
   }
 
@@ -361,7 +388,7 @@ export function RenameNFT() {
     <>
     <h1 className="text-center text-5xl Poppitandfinchsans text-white bg-grey-lighter my-4 ml-3">No renameable Wapuus are owned by this wallet.</h1>
     <div className="flex justify-around mt-10">
-      <span className="flex Poppitandfinchsans text-3xl text-center text-white">
+      <span className="Poppitandfinchsans text-3xl text-center text-white">
       <Link href="/">
         <a className="underline mr-2">Mint another Wapuu</a>
       </Link> 
@@ -374,7 +401,7 @@ export function RenameNFT() {
 
   if (ownedWapuus && ownedWapuus.length) { 
 
-    if ( toRename ) {
+    if ( toRename !== null ) {
       if ( transactionWaiting ) {
         return (
         <div className="flex flex-col items-center">
@@ -439,12 +466,12 @@ export function RenameNFT() {
         <div className="f">
         <input 
           type="text"
-          maxlength="20"
+          maxLength="20"
           value={newName}
           placeholder="New Name"
           onChange={ e => setNewName(e.target.value) }
           name="" 
-          className="Poppitandfinchsans text-2xl inline bg-grey-lighter py-2 font-normal text-center rounded text-black font-bold"
+          className="montserrat text-2xl inline bg-grey-lighter py-2 font-normal text-center rounded text-black font-bold"
             />
             <button onClick={() => renameWapuu(ownedWapuus[toRename].tokenId, newName)} className="ml-3 Poppitandfinchsans mt-4 rounded text-2xl border-6 bg-blau text-white hover:text-gray p-2 px-6 mb-8">Name Me!</button>                
         </div>
