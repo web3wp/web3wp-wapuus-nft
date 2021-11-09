@@ -278,7 +278,7 @@ export function RenameNFT() {
 
   }
   
-  async function verify() {
+  async function fetch() {
     const wapuuContract = new window.web3.eth.Contract(ABI, ADDRESS)
     setWapuuContract(wapuuContract)
 
@@ -286,23 +286,15 @@ export function RenameNFT() {
 
       setError(null)
 
-      window.web3.eth.personal.sign("Verify Wapuu NFT ownership", walletAddress, null, (error, signature) => {
-        if (error) {
-          // Handle error. Likely the user rejected the sign request
-          console.error(error)
-          setError(error.message)
+      fetchAPI("owned/"+walletAddress, 'GET')
+      .catch(function (error) {
+        setError(error.message)
+      })
+      .then(function (data) {
+        if (data && data.owned) {
+          setWapuus(data.owned)
         } else {
-          fetchAPI("owned", 'POST', {address: walletAddress, signature: signature})
-          .catch(function (error) {
-            setError(error.message)
-          })
-          .then(function (data) {
-            if (data && data.owned) {
-              setWapuus(data.owned)
-            } else {
-              setError("Sorry, this wallet address does not qualify for naming right now.")
-            }
-          });
+          setError("Sorry, there was an error getting owned Wapuus.")
         }
       });
       
@@ -368,16 +360,11 @@ export function RenameNFT() {
           :''}
       <div className="flex justify-around my-3">
         <span className="flex Poppitandfinchsans text-3xl text-center text-white">
-        You can now give your non-special edition Wapuus a custom name by writing it to the blockchain! For the first week this is only available to early OG Wapuu collectors with no fee other than gas.
-        </span>
-      </div>
-      <div className="flex justify-around my-3">
-        <span className="flex Poppitandfinchsans text-4xl text-center text-white">
-        Verify your wallet to name your Wapuu.
+        You can now give your non-special edition Wapuus a custom name by writing it to the blockchain! There is no fee other than gas.
         </span>
       </div>
       <div className="text-center">
-        <button onClick={() => verify()} className="Poppitandfinchsans mt-4 rounded text-4xl border-6 bg-blau text-white hover:text-gray p-2 px-6 mb-8">Verify</button>                
+        <button onClick={() => fetch()} className="Poppitandfinchsans mt-4 rounded text-4xl border-6 bg-blau text-white hover:text-gray p-2 px-6 mb-8">Fetch Wapuus</button>                
       </div>
       </>
     )

@@ -40,8 +40,8 @@ module.exports.getWapuu = async (event) => {
     // IF YOU ARE NOT USING CUSTOM NAMES, JUST USE THIS
     //let tokenName= `Wapuu #${parseInt( tokenId )}`
     
-    let metadata = Object.assign({}, traits[tokenId]);
-    
+    let {...metadata} = traits[tokenId];
+
     // CHECK OPENSEA METADATA STANDARD DOCUMENTATION https://docs.opensea.io/docs/metadata-standards
 
     // CALL CUSTOM TOKEN NAME IN THE CONTRACT, only if it's not a special edition
@@ -49,9 +49,11 @@ module.exports.getWapuu = async (event) => {
       const tokenNameCall = await wapuuContract.methods.viewWapuuName(tokenId).call();
       metadata.name = `Wapuu #${tokenId}${(tokenNameCall === '') ? "" : ` - ${tokenNameCall}`}`
       if ( tokenNameCall ) {
-        metadata.attributes.push({
+        if ( ! metadata.attributes.some(e => e.value === "Custom Name") ) {
+          metadata.attributes.push({
             "value": "Custom Name"
-        });
+          });
+        }
       }
     }
 
